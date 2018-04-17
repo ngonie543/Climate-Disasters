@@ -4,8 +4,7 @@
 <title>Climate Disasters</title>
 
 <script type="text/javascript">
-	var legendText = "<b>Legend</b><br><font size=\"1\">Low </font><img src=\"images/legend.png\" height=\"8\" width=\"100\"/><font size=\"1\"> High</font>";
-	
+
 	function changeContent(str, str2){
 		document.getElementById("loading_div").style.height='20px';
 	
@@ -72,7 +71,7 @@
   padding: 10px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   line-height: 18px;
-  height: 100px;
+  height: 105px;
   margin-bottom: 30px;
   width: 150px;
 }
@@ -192,7 +191,11 @@
     </table>
 </div>
 
-<div class='map-overlay' id='legend'></div>
+<div class='map-overlay' id='legend'>
+
+<div><b>Legend</b><br><font size="1">Low </font><img src="images/legend.png" height="8" width="90"/><font size="1"> High</font></div>
+<div id='legend_inner'><p>Hover over a state!</p></div>
+</div>
     
     <script src="./us-states.js"></script>
 
@@ -277,9 +280,9 @@
   });
 
   if (states.length > 0) {
-    document.getElementById('legend').innerHTML = '<strong>' + states[0].properties.name + '</strong><br><b>' + states[0].properties.incidents + '</b> disasters<br><br>'+legendText;
+    document.getElementById('legend_inner').innerHTML = '<br><strong><font size="4">' + states[0].properties.name + '</font></strong><br><b><em>' + states[0].properties.incidents + '</b></em> disasters<br><br>';
   } else {
-    document.getElementById('legend').innerHTML = '<p>Hover over a state!</p>'+legendText;
+    document.getElementById('legend_inner').innerHTML = '<p>Hover over a state!</p>';
   }
 });
 
