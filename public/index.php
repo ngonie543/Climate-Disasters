@@ -1,47 +1,38 @@
 <!doctype html>
 <html>
 <head>
-<title>US Climate Disasters</title>
+<title>Climate Disasters</title>
 
 <script type="text/javascript">
-//var maxNum = 0.0;
-function changeContent(str, str2){
-	document.getElementById("loading_div").style.height='20px';
-	if (str==""){
-  		// if blank, we'll set our innerHTML to be blank.
-  		document.getElementById("content").innerHTML="";
-  		return;
-  	}
-	if (window.XMLHttpRequest){    
-		// code for IE7+, Firefox, Chrome, Opera, Safari
-      	// create a new XML http Request that will go to our generator webpage.
-      	xmlhttp=new XMLHttpRequest();
-  	}
-	  // on state change
-  	xmlhttp.onreadystatechange=function(){
-  		// if we get a good response from the webpage, display the output
-  		if (xmlhttp.readyState==4 && xmlhttp.status==200){
-      	document.getElementById("content").innerHTML=xmlhttp.responseText;
-			//document.getElementById("map").innerHTML="";
-			//maxNum = parseFloat(xmlhttp.responseText.split("---",1)[0]);
-	 		 map.getSource('drone').setData(JSON.parse(xmlhttp.responseText));
-			 document.getElementById("loading_div").style.height='0px';
-
-			 //map.setPaintProperty(layer.value, 'fill-color', '#000000');
-			 //map.removeLayer("us-states");
-			 
-			// use our XML HTTP Request object to send a get to our content php. 
-			
-		}
-	}
+	var legendText = "<b>Legend</b><br><font size=\"1\">Low </font><img src=\"images/legend.png\" height=\"8\" width=\"100\"/><font size=\"1\"> High</font>";
 	
-		xmlhttp.open("GET","filterstates.php?disastertype="+str+"&disasteryear="+str2, true);
+	function changeContent(str, str2){
+		document.getElementById("loading_div").style.height='20px';
+	
+		if (window.XMLHttpRequest){    
+			// code for IE7+, Firefox, Chrome, Opera, Safari
+      		// create a new XML http Request that will go to our generator webpage.
+      		xmlhttp=new XMLHttpRequest();
+  		}
+	  
+	  	// on state change
+  		xmlhttp.onreadystatechange=function(){
+  			// request done, display the output
+  			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+				//update map with new Gson data from rest web service
+	 		 	map.getSource('drone').setData(JSON.parse(xmlhttp.responseText));
+			 	
+				//remove loading notification
+				document.getElementById("loading_div").style.height='0px';			
+			}
+		}
+		xmlhttp.open("GET","filterStates.php?disastertype="+str+"&disasteryear="+str2, true);
 		xmlhttp.send();
-}
+	}
 
 </script>
-<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
 
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
 <script src='https://api.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
 
@@ -54,7 +45,10 @@ function changeContent(str, str2){
         font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
     }
 	
-
+	/**
+* Set rules for how the map overlays
+* (info box and legend) will be displayed
+* on the page. */
 .map-overlay {
   position: absolute;
   bottom: 0;
@@ -86,47 +80,44 @@ function changeContent(str, str2){
 </style>
 </head>
 <body>
-
-<div id='map'></div>
-<div class='map-overlay' id='features'>
-	<h4>US Climate Disasters</h4>
-    <table>
-    	<tr>
-        	<td><font size="1">Select Disaster Type:</font></td>
-            <td><select id="disaster_type" name="incidentType" onChange="changeContent(this.value, document.getElementById('disaster_year').value)">
-    <option value="All" selected>All</option>
-    <option value="Chemical">Chemical</option>
-    <option value="Coastal Storm">Coastal Storm</option>
-    <option value="Dam/Levee Break">Dam/Levee Break</option>
-    <option value="Drought">Drought</option>
-    	<option value="Earthquake" selected="true">Earthquake</option>
-        <option value="Fire">Fire</option>
-        <option value="Fishing Loses">Fishing Losses</option>
-        <option value="Flood">Flood</option>
-        <option value="Freezing">Freezing</option>
-        <option value="Human Cause">Human Cause</option>
-        <option value="Hurricane">Hurricane</option>
-        <option value="Mud/Landslide">Mud/Landslide</option>
-        
-        <option value="Severe Ice Storm">Severe Ice Storm</option>
-        <option value="Severe Storm(s)">Severe Storm(s)</option>
-        <option value="Snow">Snow</option>
-        <option value="Terrorist">Terrorist</option>
-        <option value="Tornado">Tornado</option>
-        <option value="Toxic Substances">Toxic Substances</option>
-        <option value="Tsunami">Tsunami</option>
-        <option value="Typhoon">Typhoon</option>
-        <option value="Volcano">Volcano</option>
-        <option value="Other">Other</option>
-    </select></td>
+	<div id="loading_div" style="z-index:1000; background-color:rgba(255,0,4,1.00); height:0px;"><center>Loading...</center></div>
+	<div id='map'></div>
+	<div class='map-overlay' id='features'>
+		<h4>US Climate Disasters</h4>
+    	<table>
+    		<tr>
+        		<td><font size="1">Select Disaster Type:</font></td>
+            	<td><select id="disaster_type" name="incidentType" onChange="changeContent(this.value, document.getElementById('disaster_year').value)">
+    					<option value="All" selected>All Disasters</option>
+    					<option value="Chemical">Chemical</option>
+    					<option value="Coastal Storm">Coastal Storm</option>
+    					<option value="Dam/Levee Break">Dam/Levee Break</option>
+    					<option value="Drought">Drought</option>
+				    	<option value="Earthquake" selected="true">Earthquake</option>
+				        <option value="Fire">Fire</option>
+ 				        <option value="Fishing Loses">Fishing Losses</option>
+    				    <option value="Flood">Flood</option>
+        				<option value="Freezing">Freezing</option>
+       				    <option value="Human Cause">Human Cause</option>
+       				    <option value="Hurricane">Hurricane</option>
+       				    <option value="Mud/Landslide">Mud/Landslide</option>
+				        <option value="Other">Other</option>
+        				<option value="Severe Ice Storm">Severe Ice Storm</option>
+        				<option value="Severe Storm(s)">Severe Storm(s)</option>
+        				<option value="Snow">Snow</option>
+        				<option value="Terrorist">Terrorist</option>
+        				<option value="Tornado">Tornado</option>
+        				<option value="Toxic Substances">Toxic Substances</option>
+        				<option value="Tsunami">Tsunami</option>
+        				<option value="Typhoon">Typhoon</option>
+        				<option value="Volcano">Volcano</option>
+    				</select></td>
         </tr>
         <tr>
-        	<td>
-            <font size="1">Select Year:</font>
-            </td>
+        	<td><font size="1">Select Year:</font></td>
             <td>
             <select id="disaster_year" name="incidentType" onChange="changeContent(document.getElementById('disaster_type').value ,this.value)">
-    <option value="All"  selected>All</option>
+    				<option value="All"  selected>All Years</option>
     <option value="2018">2018</option>
     <option value="2017">2017</option>
     <option value="2016">2016</option>
@@ -194,81 +185,78 @@ function changeContent(str, str2){
     <option value="1955">1955</option>
     <option value="1954">1954</option>
     <option value="1953">1953</option>
-    <option value="1952">1952</option>>
-    
+    <option value="1952">1952</option>
     </select>
             </td>
         </tr>
     </table>
 </div>
-<div class='map-overlay' id='legend'></div>
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <div id="content">  
-    
-    </div>
+<div class='map-overlay' id='legend'></div>
     
     <script src="./us-states.js"></script>
 
-<script>
-  mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fwcmlwb3QiLCJhIjoiY2pjMDJqcDhsMDQ2MzJ4bW85MTR0YXBzYiJ9.Ag9mIZTDONNN9JdN2kW76g';
-  var map = new mapboxgl.Map({
-    container: 'map',
-    maxZoom: 5.5,
-    minZoom: 1.8,
-    style: 'mapbox://styles/mapbox/light-v9',
-    center: [-115.36957574368233, 50.732480262447524],
-    zoom: 2.850019725398168
-  });
+	<script>
+		//Load Map
+  		mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fwcmlwb3QiLCJhIjoiY2pjMDJqcDhsMDQ2MzJ4bW85MTR0YXBzYiJ9.Ag9mIZTDONNN9JdN2kW76g';
+ 		var map = new mapboxgl.Map({
+    		container: 'map',
+    		maxZoom: 5.5,
+    		minZoom: 1.8,
+    		style: 'mapbox://styles/mapbox/light-v9',
+    		center: [-115.36957574368233, 50.732480262447524],
+    		zoom: 2.850019725398168
+  		});
 
-  map.on('load', function () {
+		//code exec after map finished loading
+  		map.on('load', function () {
 
-    var layers = map.getStyle().layers;
+    	var layers = map.getStyle().layers;
 
-    // Find the index of the first symbol layer in the map style
-    var firstSymbolId;
-    for (var i = 0; i < layers.length; i++) {
-        if (layers[i].type === 'symbol') {
-            firstSymbolId = layers[i].id;
-            break;
-        }
-    }
+    	// Find the index of the first symbol layer in the map style
+    	var firstSymbolId;
+    	for (var i = 0; i < layers.length; i++) {
+        	if (layers[i].type === 'symbol') {
+            	firstSymbolId = layers[i].id;
+            	break;
+        	}
+    	}
 	
 	
-    map.addSource('drone', { type: 'geojson', data: statesData });
+    	map.addSource('drone', { type: 'geojson', data: statesData });
 
-    var statesLayer = map.addLayer({
-      'id': 'us-states',
-      'type': 'fill',
-      'source': 'drone',
-      'paint': {
-        'fill-color': {
-          property: 'density',
-          stops: [
-		  	  [0, '#9f9f9f'],
-              [0.1, '#17ad25'],
-              [10, '#31b31f'],
-              [20, '#5ebd1a'],
-              [30, '#aec21f'],
-              [40, '#b4c21f'],
-              [50, '#d1bf21'],
-              [60, '#d89328'],
-              [70, '#db802b'],
-			  [80, '#db6034'],
-			  [90, '#db473a'],
-          ]
-        },
-		'fill-outline-color':'#fff',
-        'fill-opacity': 0.75,
-      }
+    	var statesLayer = map.addLayer({
+      		'id': 'us-states',
+      		'type': 'fill',
+      		'source': 'drone',
+      		'paint': {
+        	'fill-color': {
+          		property: 'density',
+          		stops: [
+		  	  		[0, '#9f9f9f'],
+              		[0.1, '#17ad25'],
+              		[10, '#31b31f'],
+              		[20, '#5ebd1a'],
+              		[30, '#aec21f'],
+              		[40, '#b4c21f'],
+              		[50, '#d1bf21'],
+              		[60, '#d89328'],
+              		[70, '#db802b'],
+			  		[80, '#db6034'],
+			  		[90, '#db473a'],
+          		]
+        	},
+			'fill-outline-color':'#fff',
+        	'fill-opacity': 0.75,
+      	}
     }, firstSymbolId);
-
 
 	document.getElementById("disaster_type").value = "All";
 	document.getElementById("disaster_year").value = "All";	
+	
 	changeContent("All", "All");
 	map.fitBounds([[-108.2421875, 16.972741], [-87.63671875, 52.696361]]);
-
+	document.getElementById('legend').innerHTML = '<p>Hover over a state!</p>'+legendText;
   });
 
   map.on('click', 'us-states', function(e) {
@@ -282,27 +270,18 @@ function changeContent(str, str2){
   });
 
 
-//function to  
+//function to  update state info in info box
   map.on('mousemove', function(e) {
   var states = map.queryRenderedFeatures(e.point, {
     layers: ['us-states']
   });
 
-
-
-
-
-  
-
   if (states.length > 0) {
-    document.getElementById('legend').innerHTML = '<h3><strong>' + states[0].properties.name + '</strong></h3><p><strong><em>' + states[0].properties.incidents + '</strong> disasters</em></p>';
+    document.getElementById('legend').innerHTML = '<strong>' + states[0].properties.name + '</strong><br><b>' + states[0].properties.incidents + '</b> disasters<br><br>'+legendText;
   } else {
-    document.getElementById('legend').innerHTML = '<p>Place cursor over a state!</p>';
+    document.getElementById('legend').innerHTML = '<p>Hover over a state!</p>'+legendText;
   }
 });
-
-
-
 
   function almostFlatten(arr) {
     return arr.reduce(function (flat, toFlatten) {
@@ -310,7 +289,6 @@ function changeContent(str, str2){
     }, []);
   }
 </script>
-
 
 </body>
 </html>
