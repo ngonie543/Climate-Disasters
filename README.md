@@ -4,7 +4,7 @@ The API can be accessed <a href="http://climate-disasters.000webhostapp.com">her
 
 
 <b><u>Overview</b></u> <br>
-This API filters disasters by date and disaster type. It makes use of 2 dropdown menus which enable the user to select the type of disaster and the year.
+This API can be used to visualize the climate disasters that have occured in the United States since 1952. It filters disasters by date and disaster type. It makes use of 2 dropdown menus which enable the user to select the type of disaster and the year.
 
 <b><u>Representation Of Results</b></u> <br>
 After a selection has been made from the menus, the API displays the results on a map. Green states correspond to areas of low prevalence of the selected disaster, and red areas represent a high prevalence.
